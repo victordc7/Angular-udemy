@@ -1,0 +1,23 @@
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a href="#" (click)="showS.home()" class="navbar-brand">Recetario</a>
+    </div>
+
+    <div class="navbar-inverse">
+      <ul class="nav navbar-nav">
+        <li><a href="#" (click)="showS.showRecipes()">Recetas</a></li>
+        <li><a href="#" (click)="showS.showShoppingList()">Lista de compras</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dorpdown-toggle" role="button">Administrar <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Guardar data</a></li>
+            <li><a href="#">Mostrar data</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
