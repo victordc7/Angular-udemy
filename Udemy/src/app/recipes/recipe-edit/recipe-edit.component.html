@@ -1,0 +1,12 @@
+<p>
+  {{ recipe?.name }}
+  
+</p>
+<form (ngSubmit)="onSubmit(g)" #g="ngForm">
+  <div class="form-group">
+    <label for="nombre">Nombre</label>
+    <input type="text" id="nombre" class="form-control" [ngModel]="recipe?.name" name="name1" required #name1="ngModel">
+    <small class="form-text text-muted" *ngIf="!name1.valid && name1.touched"> Porfavor ingresa un nombre </small>
+  </div>
+    <button class="btn btn-success" type="submit" [disabled]="!g.valid">Enviar</button>
+</form>

@@ -1,1 +1,34 @@
 /* You can add global styles to this file, and also import other style files */
+body{
+    background-color: #fadadc30;
+    min-height: 100%;
+}
+.btn-success{
+    background-color: #779d34;
+    border: #779d34;
+}
+.btn-success.disabled, .btn-success:disabled {
+    color: #fff;
+    background-color: #779d34;
+    border-color: #779d34;
+}
+.form-control:focus {
+    color: black;
+    background-color: #fff;
+    border-color: #779d34;
+    outline: 0;
+    box-shadow: none;
+}
+.principal{
+    min-height: calc(100vh - 178px);
+    min-height: -moz-calc(100vh - 178px);
+    min-height: -webkit-calc(100vh - 178px);
+}
+
+@media only screen and (max-width: 767px){
+    .principal{
+        min-height: calc(100vh - 202px);
+        min-height: -moz-calc(100vh - 202px);
+        min-height: -webkit-calc(100vh - 202px);
+    }
+}

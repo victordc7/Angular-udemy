@@ -1,0 +1,7 @@
+a{
+    color: black;
+}
+a.active{
+    background-color: #779d34;
+    border: #779d34;
+}

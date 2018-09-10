@@ -1,22 +1,51 @@
 <div class="row">
-  <div class="col-xs-12">
-    <form>
+  <div class="col-12" *ngIf="!shoppingS.createMode">
+    <form (ngSubmit)="shoppingS.onAddItem(f)" #f="ngForm">
       <div class="row">
-        <div class="col-sm-4 form-group">
-          <label for="name">Nombre</label>
-          <input type="text" id="name" class="form-control">
+        <div class="col-md-4  col-6 form-group">
+          <label for="name">Nombre </label>
+          <select name="name" id="name" class="form-control" [(ngModel)]="selectedIngredientDB.name" required>
+            <option value="" disabled selected>Selecciones un Ingrediente</option>
+            <option value="{{ item.name }}" *ngFor="let item of shoppingS.ingredientsDB">{{ item.name }}</option>
+          </select>
         </div>
-          <div class="col-sm-2 form-group">
-            <label for="amount">Cantidad</label>
-            <input type="text" id="amount" class="form-control">
-          </div>
+        <div class="col-md-2 col-3 form-group">
+          <label for="amount">Cantidad</label>
+          <input type="text" id="amount" class="form-control" ngModel name="amount" required pattern="^(0*[1-9][0-9]*(\.[0-9]+)?|0+\.[0-9]*[1-9][0-9]*)$">
         </div>
-        <div class="row">
-          <div class="col-xs-12">
-            <button class="btn btn-success" type="submit">Agregar</button>
-            <button class="btn btn-danger" type="button">Eliminar</button>
-            <button class="btn btn-primary" type="button">Reiniciar</button>
-          </div>
+        <div class="col-md-2 col-lg-1 col-3 form-group">
+            <label for="amount">Medida</label>
+            <input type="text" name="medida" id="medida" class="form-control" [(ngModel)]="selectedIngredient.medida" readonly="readonly" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <button *ngIf="!shoppingS.editMode" class="btn btn-success" type="submit" [disabled]="!f.valid">Agregar</button>
+          <button *ngIf="!shoppingS.editMode" class="btn btn-danger" type="button">Eliminar</button>
+          <button *ngIf="!shoppingS.editMode" class="btn btn-primary" type="button" (click)="shoppingS.createIngredient()">Crear ingrediente</button>  
+          <button *ngIf="shoppingS.editMode" class="btn btn-success"  [disabled]="!f.valid">Editar</button>
+          <button *ngIf="shoppingS.editMode" class="btn btn-danger" type="button" (click)="shoppingS.cancelEdit()">Cancelar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-12" *ngIf="shoppingS.createMode">
+    <form (ngSubmit)="shoppingS.onCreateIngredient(g)" #g="ngForm">
+      <div class="row">
+        <div class="col-md-4  col-6 form-group">
+            <label for="name">Cantidad</label>
+            <input type="text" id="name" class="form-control" ngModel name="name" required>
+        </div>
+        <div class="col-md-2 col-lg-1 col-3 form-group">
+            <label for="amount">Medida</label>
+            <input type="text" id="medida" class="form-control" ngModel name="medida" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <button class="btn btn-success" type="submit" [disabled]="!g.valid">Crear</button>
+          <button class="btn btn-danger" type="button" (click)="shoppingS.cancelCreate()">Cancelar</button>
+        </div>
       </div>
     </form>
   </div>
