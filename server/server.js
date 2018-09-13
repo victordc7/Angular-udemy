@@ -11,10 +11,11 @@ var Recipes = mongoose.model( 'Recipes',{
     description: String,
     imagePath: String,
     ingredients: Array,
+    procedure: String
 });
 var Ingredients = mongoose.model( 'Ingredients',{
     name: String,
-    amount: Number
+    medida: String
 });
 
  app.configure( function(){
@@ -36,7 +37,8 @@ var Ingredients = mongoose.model( 'Ingredients',{
          name : peticion.body.name,
          description : peticion.body.description,
          imagePath : peticion.body.imagePath,
-         ingredients : peticion.body.ingredients
+         ingredients : peticion.body.ingredients,
+         procedure : peticion.body.procedure
         } , function(err,recipes){
             if(err){
                 respuesta.send(err);
@@ -88,7 +90,8 @@ var Ingredients = mongoose.model( 'Ingredients',{
         {   name : peticion.body.name,
             description : peticion.body.description,
             imagePath : peticion.body.imagePath,
-            ingredients : peticion.body.ingredients
+            ingredients : peticion.body.ingredients,
+            procedure : peticion.body.procedure
         },
         function(err,recipes){
             if(err){
@@ -112,6 +115,7 @@ var Ingredients = mongoose.model( 'Ingredients',{
  app.post('/api/ingredients' , function(peticion, respuesta){
     Ingredients.create({
         name : peticion.body.name,
+        medida : peticion.body.medida
     } , function(err,ingredients){
            if(err){
                respuesta.send(err);

@@ -1,5 +1,6 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipe.model';
@@ -10,8 +11,10 @@ import { ShoppingListService } from '../../shopping-list/shopping-list.service';
   templateUrl: './recipe-detail.component.html',
   styleUrls: ['./recipe-detail.component.css']
 })
-export class RecipeDetailComponent implements OnInit {
-  id: number;
+export class RecipeDetailComponent implements OnInit, OnDestroy {
+  subscription1: Subscription;
+  subscription2: Subscription;
+  id;
   recipe: Recipe;
   Iexiste;
   existe;
@@ -23,10 +26,22 @@ export class RecipeDetailComponent implements OnInit {
                private shoppingS: ShoppingListService) { }
 
   ngOnInit() {
-    this.route.params.subscribe( (params: Params) => {
-      this.id = +params['id'];
-      this.recipe = this.recipeS.getRecipe(this.id);
+    this.recipeS.getRecipes();
+    this.subscription2 = this.route.params.subscribe( (params: Params) => {
+      this.id =  params.id;
+      this.recipe = this.recipeS.recipes.find(( recipe ) =>  recipe._id === this.id );
     } );
+    this.subscription1 = this.recipeS.recipes2.subscribe((data) => {
+      this.subscription2 = this.route.params.subscribe( (params: Params) => {
+        this.id =  params.id;
+        console.log();
+        this.recipe = data.find(( recipe ) =>  recipe._id === this.id );
+      } );
+    });
+  }
+  ngOnDestroy() {
+    this.subscription1.unsubscribe();
+    this.subscription2.unsubscribe();
   }
 
   addToCar() {

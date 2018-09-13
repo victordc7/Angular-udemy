@@ -1,45 +1,48 @@
 import { Injectable } from '@angular/core';
-import { Recipe } from './recipe.model';
-import { Ingredient } from '../shared/ingredient.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecipeService {
-  recipes: Recipe[] = [
-    new Recipe(
-      'Plato Mexicano',
-      'Variados platos mexicanos con una interesante combinacion de sabores',
-      'http://www.upsocl.com/wp-content/uploads/2015/04/comida-mexicana.jpg',
-      [ new Ingredient('Caraotas', 1, 'Kg'),
-        new Ingredient('Pollo', 0.2, 'Kg')
-      ]
-    ),
-    new Recipe(
-      'Milanesa de Pollo',
-      'Milanesa de pollo empanisada acompañada de papas fritas',
-      'https://www.euroresidentes.com/alimentacion/comida/wp-content/uploads/sites/3/2017/02/comidas-tipicas-argentina-milanesa.jpg',
-      [ new Ingredient('Pollo', 1, 'Kg'),
-        new Ingredient('Papas', 1, 'Kg')
-      ]
-    ),
-    new Recipe(
-      'Pizza de Peperoni',
-      'Rica pizza de peperoni al tradicional estilo newyorkino',
-      'https://d25rq8gxcq0p71.cloudfront.net/language-guide/758/pepperoni%20pizza.jpg',
-      [ new Ingredient('Harina', 1, 'Kg'),
-        new Ingredient('Peperoni', 0.3, 'Kg')
-      ]
-    )
-  ];
-  recipeSelected: Recipe;
-  constructor() { }
+  recipes: any = [];
+  recipes2 = new Subject<any>();
+  filteredName = '';
 
-  onSelect() {
 
-  }
+  constructor(private http: HttpClient, private router: Router) { }
+
+
   getRecipes() {
-    return this.recipes.slice();
+    this.http.get('http://localhost:8080/api/recipes')
+    .subscribe( (data: HttpHeaders) => {
+      this.recipes = data;
+      this.recipes2.next(data);
+    }) ;
+  }
+
+  addRecipe( newRecipe ) {
+    this.http.post('http://localhost:8080/api/recipes', newRecipe )
+    .subscribe( (data: HttpHeaders) => {
+      this.recipes = data;
+    }) ;
+  }
+
+  updateRecipe(id, item) {
+    this.http.put('http://localhost:8080/api/recipes/' + id, item )
+    .subscribe( (data: HttpHeaders) => {
+      this.recipes = data;
+    }) ;
+  }
+
+  deleteRecipe(item) {
+    this.http.delete('http://localhost:8080/api/recipes/' + item._id )
+    .subscribe( (data: HttpHeaders) => {
+      this.recipes = data;
+      this.router.navigate(['/recetas']);
+    }) ;
   }
 
   getRecipe(id: number) {

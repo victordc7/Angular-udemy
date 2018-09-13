@@ -1,9 +1,10 @@
-<div class="row">
-  <div class="col-12">
-    <img src="{{ recipe.imagePath }}" alt="{{ recipe.name }}" class="img-responsive" style="height: 400px; width: 100%;">
+<div style="position: sticky !important; top:10px !important;">
+  <div class="row">
+    <div class="col-12">
+      <img src="{{ recipe.imagePath }}" alt="{{ recipe.name }}" class="img-responsive" style="height: 400px; width: 100%;">
+    </div>
   </div>
-</div>
-<div class="row d-flex justify-content-md-between">
+  <div class="row d-flex justify-content-md-between">
     <div class="col-7 col-md-8">
       <h1>{{ recipe.name }}</h1>
     </div>
@@ -13,21 +14,32 @@
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" style="cursor: pointer" (click)="addToCar()">Agregar lista de compras</a>
           <a class="dropdown-item" style="cursor: pointer" routerLink="editar">Editar receta</a>
-          <a class="dropdown-item" style="cursor: pointer">Eliminar receta</a>
+          <a class="dropdown-item" style="cursor: pointer" (click)="recipeS.deleteRecipe(recipe)">Eliminar receta</a>
         </div>
       </div>
     </div>
-</div>
-<div class="row">
+  </div>
+  <div class="row">
     <div class="col-12">
       {{ recipe.description }}
     </div>
-</div>
-<div class="row">
+  </div>
+  <div class="row" style="margin-top:20px;">
     <div class="col-12">
-      <h6>Ingredientes</h6>
+        <h6>Ingredientes</h6>
       <ul class="list-group">
-        <li class="list-group-item" *ngFor="let ingredient of recipe.ingredients"> {{ ingredient.name }} {{ ingredient.amount }}{{ ingredient.medida }} </li>
+        <li class="list-group-item" *ngFor="let ingredient of recipe.ingredients"> {{ ingredient.name }} ({{ ingredient.amount }}{{ ingredient.medida }}) </li>
       </ul>
     </div>
+  </div>
+  <div class="row" style="margin-top:20px;">
+    <div class="col-12">
+      <h6>Procedimiento</h6>
+      <div class="card">
+        <div class="card-body">
+          <p [innerHTML]="recipe.procedure"></p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

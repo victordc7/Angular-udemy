@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RecipeService } from './recipe.service';
 
 @Component({
   selector: 'app-recipes',
@@ -7,10 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RecipesComponent implements OnInit {
 
-  constructor() { }
+  constructor( private recipeS: RecipeService) { }
 
   ngOnInit() {
+    this.recipeS.getRecipes();
   }
 
-
+  scroll(target) {
+    target.scrollIntoView({ behavior: 'smooth' });
+  }
 }

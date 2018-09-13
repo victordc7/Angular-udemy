@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 })
 export class ShoppingListService {
   ingredients: Ingredient[] = [];
+  selectedIngredientChange = new Subject<string>();
   editItem = new Subject<Ingredient>();
   editItemIndex: number;
   editMode = false;
@@ -22,13 +23,35 @@ export class ShoppingListService {
 
   getIngredientsDB() {
     this.http.get('http://localhost:8080/api/ingredients')
-    .subscribe( (data: HttpHeaders) => { this.ingredientsDB = data; } );
+    .subscribe( (data: HttpHeaders) => {
+      this.ingredientsDB = data;
+      this.ingredientsDB = this.ingredientsDB.sort(function compare(a, b) {
+      if ( a.name < b.name ) {
+        return -1;
+      }
+      if ( a.name > b.name ) {
+        return 1;
+      }
+      return 0;
+      });
+    }) ;
   }
 
   createIngredientDB( newIngredient ) {
     this.http.post('http://localhost:8080/api/ingredients', newIngredient )
-    .subscribe( ( data: HttpHeaders) => { this.ingredientsDB = data; } );
-}
+    .subscribe( ( data: HttpHeaders) => {
+      this.ingredientsDB = data;
+      this.ingredientsDB = this.ingredientsDB.sort(function compare(a, b) {
+      if ( a.name < b.name ) {
+        return -1;
+      }
+      if ( a.name > b.name ) {
+        return 1;
+      }
+      return 0;
+      });
+    }) ;
+  }
 
 
   updateIngredient(index: number, ingredient: Ingredient) {
@@ -40,6 +63,7 @@ export class ShoppingListService {
       this.ingredients[this.editItemIndex].name = form.value.name;
       this.ingredients[this.editItemIndex].amount = (Number(form.value.amount));
       this.ingredients[this.editItemIndex].medida = form.value.medida;
+      this.editMode = false;
     } else {
       this.Iexiste = this.ingredients.findIndex( function(ingrediente) {
         return ingrediente.name ===  form.value.name;
@@ -54,13 +78,12 @@ export class ShoppingListService {
         this.ingredients.push(new Ingredient(form.value.name, form.value.amount, form.value.medida));
       }
     }
-    this.editMode = false;
+    this.resetForm(form);
   }
 
   onCreateIngredient( form: NgForm ) {
-     const newIngredientname = form.value.name;
-     const newIngredientmedida = form.value.medida;
-     this.createIngredientDB({ name: newIngredientname, medida: newIngredientmedida });
+     const newIngredient = form.value;
+     this.createIngredientDB(newIngredient);
      this.createMode = false;
   }
 
@@ -78,7 +101,20 @@ export class ShoppingListService {
     this.editItem.next(this.ingredients[i]);
   }
 
-  cancelEdit() {
+  onDeleteIngredient( i: number ) {
+    this.ingredients.splice(i, 1);
+  }
+
+  cancelEdit(form: NgForm) {
+    this.resetForm(form);
     this.editMode = false;
+  }
+
+  resetForm(form: NgForm) {
+    form.setValue({name: '', amount: '', medida: form.value.medida });
+  }
+
+  changeSelectedIngredient(data) {
+    this.selectedIngredientChange.next( data );
   }
 }

@@ -19,6 +19,16 @@ body{
     outline: 0;
     box-shadow: none;
 }
+
+input.ng-invalid.ng-touched, select.ng-invalid.ng-touched, textarea.ng-invalid.ng-touched{
+    border-left: solid 5px red;
+    box-shadow: none;
+}
+input.ng-valid, select.ng-valid, textarea.ng-valid{
+    border-left: solid 5px #779d34;
+    box-shadow: none;
+}
+
 .principal{
     min-height: calc(100vh - 178px);
     min-height: -moz-calc(100vh - 178px);

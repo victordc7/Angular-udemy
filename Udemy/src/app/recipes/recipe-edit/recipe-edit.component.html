@@ -1,12 +1,98 @@
-<p>
-  {{ recipe?.name }}
-  
-</p>
-<form (ngSubmit)="onSubmit(g)" #g="ngForm">
-  <div class="form-group">
-    <label for="nombre">Nombre</label>
-    <input type="text" id="nombre" class="form-control" [ngModel]="recipe?.name" name="name1" required #name1="ngModel">
-    <small class="form-text text-muted" *ngIf="!name1.valid && name1.touched"> Porfavor ingresa un nombre </small>
+  <div class="col-12">
+    <form [formGroup]="recipeForm" (ngSubmit)= "onSubmit()">
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <label for="name">Nombre</label>
+            <input type="text" id="name" class="form-control" formControlName="name">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <label for="imagePath">URL de la Imagen</label>
+            <input type="text" id="imagePath" class="form-control" formControlName="imagePath">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <img [src]="recipeForm.value.imagePath" class="img-responsive" style="width: 100%;"> 
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <label for="description">Descripcion</label>
+            <textarea type="text" rows="3" id="description" class="form-control" formControlName="description">
+            </textarea>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <label for="procedure">Procedimiento</label>
+            <textarea type="text" rows="8" id="procedure" class="form-control" formControlName="procedure">
+            </textarea>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 form-group" formArrayName="ingredients">
+          <div class="row ingredientList d-flex justify-content-between"
+          *ngFor="let ingredientControl of recipeForm.get('ingredients').controls; let i = index"
+          [formGroupName]="i">
+            <div class="col-md-6 col-12">
+              <select formControlName="name" class="form-control" (change)="OnBlur(i)">
+                  <option value="" disabled selected>Selecciones un Ingrediente</option>
+                  <option value="{{ item.name }}" *ngFor="let item of shoppingS.ingredientsDB" >{{ item.name }}</option>
+                </select>
+            </div>
+            <div class="col-md-3 col-5">
+                <input type="number" class="form-control" formControlName="amount">
+            </div>
+            <div class="col-md-2 col-4">
+                <input type="text" class="form-control" formControlName="medida" readonly>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" (click)="onDeleteIngredient(i)">X</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <button *ngIf="!shoppingS.createMode" class="btn btn-success" type="button" (click)="onAddIngredient()">Agregar ingrediente</button>
+              <button *ngIf="!shoppingS.createMode" class="btn btn-primary" type="button" (click)="shoppingS.createIngredient()">Crear ingrediente</button>
+            </div>
+          </div>
+          <div class="col-12" *ngIf="shoppingS.createMode">
+            <form (ngSubmit)="shoppingS.onCreateIngredient(h)" #h="ngForm">
+              <div class="row">
+                <div class="col-7 form-group">
+                    <label for="name">Ingrediente</label>
+                    <input type="text" id="name" class="form-control" ngModel name="name" required>
+                </div>
+                <div class="col-4 col-sm-2 form-group">
+                    <label for="amount">Medida</label>
+                    <input type="text" id="medida" class="form-control" ngModel name="medida" required>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <button class="btn btn-success" type="submit" [disabled]="!h.valid">Crear</button>
+                  <button class="btn btn-danger" type="button" (click)="shoppingS.cancelCreate()">Cancelar</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">  
+          <button class="btn btn-success" type="submit" [disabled]="recipeForm.invalid">Guardar</button>
+          <button class="btn btn-danger" type="button" [routerLink]="['../']">Cancelar</button>
+        </div>
+      </div>
+    </form>
   </div>
-    <button class="btn btn-success" type="submit" [disabled]="!g.valid">Enviar</button>
-</form>

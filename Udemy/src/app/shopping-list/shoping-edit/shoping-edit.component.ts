@@ -1,34 +1,30 @@
-import { Component, OnInit, ViewChild, DoCheck, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, Output } from '@angular/core';
 import { ShoppingListService } from '../shopping-list.service';
 import { Ingredient } from '../../shared/ingredient.model';
 import { NgForm } from '@angular/forms';
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-shoping-edit',
   templateUrl: './shoping-edit.component.html',
   styleUrls: ['./shoping-edit.component.css']
 })
-export class ShopingEditComponent implements OnInit, DoCheck, OnDestroy {
+export class ShopingEditComponent implements OnInit, OnDestroy {
   @ViewChild('f') signupForm: NgForm;
-  selectedIngredientChange = new Subject<string>();
   subscription1: Subscription;
   subscription2: Subscription;
   ingredients: Ingredient[];
-  selectedIngredientDB = { name: '' , medida: ''};
+  selectedIngredientDB: string;
   selectedIngredient = { name: '', medida: ''};
   constructor(private shoppingS: ShoppingListService) { }
 
-  ngDoCheck() {
-    this.selectedIngredientChange.next(this.signupForm.value.name);
-  }
 
   ngOnInit() {
     this.ingredients = this.shoppingS.ingredients;
-
     this.shoppingS.getIngredientsDB();
+    this.shoppingS.createMode = false;
 
-    this.subscription1 = this.selectedIngredientChange.subscribe(
+    this.subscription1 = this.shoppingS.selectedIngredientChange.subscribe(
       ( name ) => {
         if ( name !== undefined && name !== '') {
           this.selectedIngredient = this.shoppingS.ingredientsDB.find(function(ingredient) {
@@ -55,6 +51,7 @@ export class ShopingEditComponent implements OnInit, DoCheck, OnDestroy {
     this.subscription1.unsubscribe();
     this.subscription2.unsubscribe();
   }
-
-
+  onChange() {
+    this.shoppingS.changeSelectedIngredient(this.selectedIngredientDB);
+  }
 }

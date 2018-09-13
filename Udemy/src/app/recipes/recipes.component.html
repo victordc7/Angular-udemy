@@ -1,8 +1,11 @@
 <div class="row d-flex justify-content-between principal">
-  <div class="col-lg-5">
-    <app-recipe-list></app-recipe-list>
+  <div class="col-12" style="margin-bottom: 10px;">
+    <input type="text" class="form-control" placeholder="Buscar Receta" [(ngModel)]="recipeS.filteredName" style="width:40%; min-width: 300px;">
   </div>
-  <div class="col-xl-6 col-lg-7">
+  <div class="col-lg-5">
+    <app-recipe-list (click)="scroll(target)"></app-recipe-list>
+  </div>
+  <div class="col-xl-6 col-lg-7" #target>
     <router-outlet></router-outlet>
   </div>
 </div>
